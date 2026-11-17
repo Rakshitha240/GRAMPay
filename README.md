@@ -194,4 +194,4 @@ By combining offline-first technology, QR codes, Bluetooth communication and Vil
 
 ---
 
-*Built with ❤️ for innovation, accessibility and financial inclusion.*
+ 
