@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" role="img" aria-label="GRAMPay">
+  <defs>
+    <linearGradient id="g" x1="6" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22c55e" />
+      <stop offset="1" stop-color="#0f6b3a" />
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="14" fill="url(#g)" />
+  <circle cx="36" cy="12" r="3.2" fill="#bbf7d0" />
+  <text x="23" y="32" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="23" font-weight="800" fill="#ffffff">G</text>
+</svg>
