@@ -25,7 +25,7 @@ export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
       <main className="flex flex-1 items-center justify-center px-5 py-14">
         <div className="w-full max-w-md animate-fade-up">
           <Card className="p-8 sm:p-10">
-            <span className="eyebrow">Phase 1 preview</span>
+            <span className="eyebrow">Secure access</span>
             <h1 className="mt-5 text-2xl font-bold sm:text-3xl">{title}</h1>
             <p className="mt-3 text-sm leading-relaxed text-ink-500">
               {subtitle}
@@ -33,7 +33,7 @@ export function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
             <div className="mt-8">{children}</div>
           </Card>
           <p className="mt-5 text-center text-xs text-ink-500">
-            Authentication will be added in Phase 2.
+            Demo accounts are available on the login screen.
           </p>
         </div>
       </main>

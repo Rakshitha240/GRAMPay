@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Container } from '../ui/Container'
-import { ButtonLink } from '../ui/Button'
+import { Button, ButtonLink } from '../ui/Button'
 import { Logo } from '../ui/Logo'
 import { ArrowRightIcon, CloseIcon, MenuIcon } from '../ui/icons'
+import { dashboardPathFor } from '../../lib/api'
+import { useAuth } from '../../lib/auth'
 
 const navLinks = [
   { label: 'Home', href: '#top' },
@@ -13,6 +15,7 @@ const navLinks = [
 
 export function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { user, token, logout } = useAuth()
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/80 bg-white/85 backdrop-blur-xl">
@@ -31,15 +34,26 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-2 md:flex">
-          <ButtonLink to="/login" variant="ghost" size="sm">
-            Log in
-          </ButtonLink>
-          <ButtonLink to="/register" size="sm">
-            Get started
-            <ArrowRightIcon className="h-4 w-4" />
-          </ButtonLink>
-        </div>
+        {token && user ? (
+          <div className="hidden items-center gap-2 md:flex">
+            <ButtonLink to={dashboardPathFor(user.role)} variant="ghost" size="sm">
+              Dashboard
+            </ButtonLink>
+            <Button variant="secondary" size="sm" onClick={() => void logout()}>
+              Log out
+            </Button>
+          </div>
+        ) : (
+          <div className="hidden items-center gap-2 md:flex">
+            <ButtonLink to="/login" variant="ghost" size="sm">
+              Log in
+            </ButtonLink>
+            <ButtonLink to="/register" size="sm">
+              Get started
+              <ArrowRightIcon className="h-4 w-4" />
+            </ButtonLink>
+          </div>
+        )}
 
         <button
           type="button"
@@ -70,16 +84,40 @@ export function Navbar() {
               </a>
             ))}
             <div className="mt-3 grid grid-cols-2 gap-2">
-              <ButtonLink to="/login" variant="secondary" size="sm">
-                Log in
-              </ButtonLink>
-              <ButtonLink
-                to="/register"
-                size="sm"
-                onClick={() => setMenuOpen(false)}
-              >
-                Get started
-              </ButtonLink>
+              {token && user ? (
+                <>
+                  <ButtonLink
+                    to={dashboardPathFor(user.role)}
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Dashboard
+                  </ButtonLink>
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      setMenuOpen(false)
+                      void logout()
+                    }}
+                  >
+                    Log out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <ButtonLink to="/login" variant="secondary" size="sm">
+                    Log in
+                  </ButtonLink>
+                  <ButtonLink
+                    to="/register"
+                    size="sm"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Get started
+                  </ButtonLink>
+                </>
+              )}
             </div>
           </Container>
         </div>

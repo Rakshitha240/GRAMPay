@@ -1,3 +1,4 @@
+from decimal import Decimal
 from functools import lru_cache
 from pathlib import Path
 from urllib.parse import quote_plus
@@ -30,6 +31,17 @@ class Settings(BaseSettings):
     postgres_password: str = 'grampay'
     postgres_db: str = 'grampay'
     database_url: str | None = None
+
+    # Auth settings. Override SECRET_KEY in any shared environment.
+    secret_key: str = 'grampay-phase2-development-secret'
+    access_token_expire_minutes: int = 60 * 24 * 7
+
+    # Demo wallet values shown on the Phase 2 dashboards.
+    demo_customer_balance: Decimal = Decimal('2500.00')
+    demo_merchant_balance: Decimal = Decimal('0.00')
+    demo_offline_spending_limit: Decimal = Decimal('500.00')
+    registration_balance: Decimal = Decimal('1000.00')
+    demo_account_password: str = 'Demo@1234'
 
     @computed_field
     @property
