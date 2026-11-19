@@ -145,12 +145,76 @@ GRAMPay focuses on secure transaction record exchange through:
 
 ---
 
+##  Phase 2 — Authentication and Dashboards
+
+Phase 1 landing page is unchanged. Phase 2 adds real authentication, roles, demo wallets and role-specific dashboards. QR/Bluetooth payment flows are intentionally deferred to Phase 3.
+
+### Backend
+
+FastAPI APIs (prefix `/api/v1`):
+
+| Endpoint | Access | Purpose |
+|---|---|---|
+| `POST /auth/register` | public | Register a `customer` or `merchant` account |
+| `POST /auth/login` | public | Return an opaque bearer token and user profile |
+| `POST /auth/logout` | authenticated | Revoke the current session |
+| `GET /auth/me` | authenticated | Get the current user |
+| `GET /wallet/me` | authenticated | Get wallet balance and offline spending limit |
+| `GET /transactions/me?limit=10` | authenticated | Get recent transactions |
+| `GET /dashboard/customer` | customer only | Customer dashboard payload |
+| `GET /dashboard/merchant` | merchant only | Merchant dashboard payload and sales overview |
+| `GET /health` / `GET /health/db` | public | Liveness / database readiness |
+
+Passwords are hashed with bcrypt. Only a SHA-256 hash of each session token is stored. Requests with missing, expired or revoked tokens receive `401`; wrong-role dashboard access receives `403`.
+
+PostgreSQL models live in `backend/app/db/models.py`. Create the tables and seed demo accounts with:
+
+```bash
+cd backend
+python -m pip install -r requirements.txt
+cp .env.example .env       # set your PostgreSQL credentials and SECRET_KEY
+python -m app.db.seed
+uvicorn app.main:app --reload
+```
+
+Seeded demo accounts (password `Demo@1234`):
+
+- Customer: `customer@grampay.demo`
+- Merchant: `merchant@grampay.demo`
+
+The seed script is idempotent and also adds sample transactions for both dashboards.
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+cp .env.example .env       # optional: override VITE_API_URL
+npm run dev
+```
+
+The app uses the token returned by `/auth/login`, stores it in `localStorage`, validates it on reload, and guards routes by role. QR/payment buttons are visibly marked as Phase 3 features and are disabled.
+
+### Tests
+
+The automated tests use an in-memory SQLite database so they run without a PostgreSQL server:
+
+```bash
+cd backend
+python -m pip install -r requirements-dev.txt
+python -m pytest -q
+```
+
+Then use `npm run typecheck` and `npm run build` in `frontend/`.
+
+---
+
 ##  Development Roadmap
 
 | Phase | Development |
 |---|---|
-| Phase 1 | Project setup and landing page |
-| Phase 2 | Authentication and dashboards |
+| Phase 1 | Project setup and landing page — complete |
+| Phase 2 | Authentication and dashboards — complete |
 | Phase 3 | QR payment system |
 | Phase 4 | Offline transaction management |
 | Phase 5 | Bluetooth and Village Mesh Relay |
